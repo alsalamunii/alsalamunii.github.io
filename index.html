@@ -1,311 +1,306 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رحلة الأرنب إلى قرية الجزر</title>
-    <style>
-        /* استدعاء خط عربي جذاب من جوجل */
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Help the bunny </title>
 
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #e0f7fa; /* لون سماء هادئ */
-            font-family: 'Tajawal', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-        .container {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-            border: 5px solid #ffcc80;
-            position: relative;
-            overflow: hidden;
-        }
+    body {
+      background: radial-gradient(circle at top, #7b2cbf, #3c1361 60%, #14001f);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #f3e8ff;
+    }
 
-        h1 {
-            color: #f57c00;
-            font-size: 26px;
-            margin-bottom: 10px;
-            font-weight: 800;
-        }
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1px, transparent 1px);
+      background-size: 80px 80px;
+      background-position: 0 0, 40px 40px;
+      animation: moveStars 30s linear infinite;
+    }
 
-        p.subtitle {
-            color: #777;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
+    @keyframes moveStars {
+      from { transform: translateY(0); }
+      to { transform: translateY(80px); }
+    }
 
-        /* مشهد الأرنب والقرية */
-        .scene {
-            position: relative;
-            height: 90px;
-            border-bottom: 5px dashed #81c784; /* عشب */
-            margin-bottom: 25px;
-            display: flex;
-            align-items: flex-end;
-        }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px 80px;
+      text-align: center;
+    }
 
-        .village {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            font-size: 55px;
-            line-height: 1;
-            z-index: 2;
-        }
+    h1 {
+      font-size: 52px;
+      margin-bottom: 15px;
+      color: #f5b8ff;
+      text-shadow: 0 3px 10px rgba(255,126,182,0.25);
+    }
 
-        .rabbit {
-            position: absolute;
-            right: 0%;
-            bottom: 0;
-            font-size: 45px;
-            /* حركة انسيابية عند تغير النسبة */
-            transition: right 1s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 3;
-            /* حركة القفز المستمرة */
-            animation: bounce 0.8s infinite alternate;
-        }
+    .subtitle {
+      font-size: 20px;
+      opacity: 0.85;
+      margin-bottom: 45px;
+      line-height: 1.8;
+    }
 
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-12px); }
-        }
+    .journey-card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 35px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+      margin-bottom: 35px;
+    }
 
-        /* شريط التقدم */
-        .progress-bg {
-            background: #eeeeee;
-            height: 28px;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            position: relative;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-        }
+    .journey {
+      position: relative;
+      height: 180px;
+      margin-top: 25px;
+    }
 
-        .progress-fill {
-            background: linear-gradient(90deg, #ffb74d, #ff9800);
-            height: 100%;
-            width: 0%;
-            transition: width 1s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: flex;
-            align-items: center;
-            padding-right: 15px;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            box-sizing: border-box;
-            white-space: nowrap;
-        }
+    .path {
+      position: absolute;
+      top: 90px;
+      left: 5%;
+      width: 90%;
+      height: 18px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 25px;
-            font-size: 15px;
-        }
+    .progress {
+      height: 100%;
+      width: 42%;
+      background: linear-gradient(90deg, #d291ff, #ffd166);
+      border-radius: 50px;
+      animation: glow 2s infinite alternate;
+    }
 
-        /* أزرار التبرع/الدفع */
-        .actions button {
-            background: #ff9800;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            margin: 5px;
-            box-shadow: 0 4px 10px rgba(255,152,0,0.3);
-        }
+    @keyframes glow {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.15); }
+    }
 
-        .actions button:hover {
-            background: #f57c00;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(255,152,0,0.4);
-        }
+    .bunny {
+      position: absolute;
+      top: 30px;
+      left: 40%;
+      font-size: 75px;
+      transform: translateX(-50%);
+      animation: hop 1.3s infinite alternate ease-in-out;
+      transition: left 0.5s;
+    }
 
-        .actions button:active {
-            transform: translateY(0);
-        }
+    @keyframes hop {
+      from {
+        transform: translate(-50%, 0px);
+      }
+      to {
+        transform: translate(-50%, -12px);
+      }
+    }
 
-        /* لوحة المتصدرين */
-        .leaderboard {
-            background: #fff8e1;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 35px;
-            text-align: right;
-            border: 2px solid #ffe082;
-        }
+    .village {
+      position: absolute;
+      right: 3%;
+      top: 18px;
+      font-size: 90px;
+      animation: floatVillage 2s infinite alternate;
+    }
 
-        .leaderboard h3 {
-            color: #ef6c00;
-            margin-top: 0;
-            text-align: center;
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
+    @keyframes floatVillage {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-8px); }
+    }
 
-        .leaderboard ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+    .percentage {
+      margin-top: 30px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #f5b8ff;
+    }
 
-        .leaderboard li {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 10px;
-            border-bottom: 2px dashed #ffe082;
-            font-weight: bold;
-            color: #5d4037;
-        }
+    .goal-text {
+      margin-top: 12px;
+      font-size: 18px;
+      opacity: 0.85;
+    }
 
-        .leaderboard li:last-child {
-            border-bottom: none;
-        }
+    .support-btn {
+      margin-top: 35px;
+      background: linear-gradient(135deg, #c77dff, #7b2cbf);
+      color: white;
+      border: none;
+      padding: 18px 38px;
+      border-radius: 999px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 10px 20px rgba(255,126,182,0.3);
+    }
 
-        .leaderboard li span:first-child {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .support-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 25px rgba(255,126,182,0.4);
+    }
 
-        /* تأثير الجزر المتطاير */
-        .floating-carrot {
-            position: absolute;
-            font-size: 24px;
-            pointer-events: none;
-            animation: floatUp 1.5s forwards ease-out;
-            z-index: 10;
-        }
+    .leaders {
+      margin-top: 30px;
+      display: grid;
+      gap: 15px;
+    }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.5); opacity: 1; }
-            50% { transform: translateY(-50px) scale(1.2); opacity: 1; }
-            100% { transform: translateY(-100px) scale(1); opacity: 0; }
-        }
-    </style>
+    .leader {
+      background: rgba(255,255,255,0.7);
+      padding: 18px 22px;
+      border-radius: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      transition: 0.3s;
+    }
+
+    .leader:hover {
+      transform: translateY(-4px);
+    }
+
+    .rank {
+      font-size: 22px;
+    }
+
+    .name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .amount {
+      color: #f5b8ff;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 45px;
+      opacity: 0.7;
+      font-size: 15px;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .bunny {
+        font-size: 58px;
+      }
+
+      .village {
+        font-size: 65px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container" id="main-container">
-        <h1>ساعد الأرنب اللطيف للوصول إلى قريته! 🐰</h1>
-        <p class="subtitle">كل مساهمة تقرب الأرنب خطوة نحو الجزر اللذيذ</p>
+<div class="stars"></div>
 
-        <!-- مشهد الأرنب والقرية -->
-        <div class="scene">
-            <div class="village">🏡🥕</div>
-            <div class="rabbit" id="rabbit">🐇</div>
-        </div>
+<div class="container">
 
-        <!-- شريط التقدم -->
-        <div class="progress-bg">
-            <div class="progress-fill" id="progress-fill">0%</div>
-        </div>
-        <div class="stats">
-            <span id="current-amount">المبلغ الحالي: 0$</span>
-            <span id="goal-amount">الهدف: 1000$</span>
-        </div>
+  <h1>🐰 Help the Bunny Reach the Carrot 🥕</h1>
 
-        <!-- أزرار الدفع -->
-        <div class="actions">
-            <button onclick="addProgress(50, this)">دفع 50$ 🥕</button>
-            <button onclick="addProgress(100, this)">دفع 100$ 🥕</button>
-            <button onclick="addProgress(250, this)">دفع 250$ 🥕</button>
-        </div>
+  <p class="subtitle">
+    Every small bit of support helps the bunny move one step closer to the magical carrot village ✨🐰
+  </p>
 
-        <!-- لوحة المتصدرين -->
-        <div class="leaderboard">
-            <h3>🏆 لوحة شرف المتبرعين</h3>
-            <ul id="leaderboard-list">
-                <li><span>🥇 أحمد سعيد</span> <span>300$</span></li>
-                <li><span>🥈 سارة محمد</span> <span>150$</span></li>
-                <li><span>🥉 فاعل خير</span> <span>100$</span></li>
-            </ul>
-        </div>
+  <div class="journey-card">
+
+    <div class="journey">
+
+      <div class="path">
+        <div class="progress"></div>
+      </div>
+
+      <div class="bunny">🐰</div>
+
+      <div class="village">🥕🏡</div>
+
     </div>
 
-    <script>
-        // إعدادات البداية
-        let currentAmount = 0;
-        const goalAmount = 1000;
+    <div class="percentage">42% Journey Complete ✨</div>
 
-        // عناصر الصفحة
-        const progressFill = document.getElementById('progress-fill');
-        const currentAmountText = document.getElementById('current-amount');
-        const rabbit = document.getElementById('rabbit');
-        const container = document.getElementById('main-container');
+    <button class="support-btn">
+     🐰 Join the Bunny Journey
+    </button>
 
-        // دالة إضافة التقدم
-        function addProgress(amount, btnElement) {
-            if (currentAmount >= goalAmount) return; // تم الوصول للهدف
+  </div>
 
-            currentAmount += amount;
-            if (currentAmount > goalAmount) currentAmount = goalAmount; // لا تتجاوز الهدف
+  <div class="journey-card">
 
-            // حساب النسبة المئوية
-            let percentage = (currentAmount / goalAmount) * 100;
+    <h2 style="margin-bottom:25px;color:#ff7eb6;">🏆 المتصدرون</h2>
 
-            // تحديث العرض
-            progressFill.style.width = percentage + '%';
-            progressFill.innerText = Math.round(percentage) + '%';
-            currentAmountText.innerText = `المبلغ الحالي: ${currentAmount}$`;
+    <div class="leaders">
 
-            // تحريك الأرنب (الحد الأقصى 85% حتى لا يختفي خلف القرية)
-            let rabbitPosition = Math.min(percentage, 85);
-            rabbit.style.right = rabbitPosition + '%';
+      <div class="leader">
+        <div>
+          <span class="rank">🥇</span>
+          <span class="name">BunnyHero</span>
+        </div>
+        <div class="amount">$20</div>
+      </div>
 
-            // إنشاء تأثير بصري (جزر متطاير) عند النقر
-            createFloatingEffect(btnElement);
+      <div class="leader">
+        <div>
+          <span class="rank">🥈</span>
+          <span class="name">CarrotKing</span>
+        </div>
+        <div class="amount">$12</div>
+      </div>
 
-            // رسالة شكر عند اكتمال الهدف
-            if (currentAmount === goalAmount) {
-                setTimeout(() => {
-                    alert("ياي! شكراً لك! لقد وصل الأرنب إلى قرية الجزر بسلام! 🥕🐰🎉");
-                }, 1000);
-            }
-        }
+      <div class="leader">
+        <div>
+          <span class="rank">🥉</span>
+          <span class="name">MoonRabbit</span>
+        </div>
+        <div class="amount">$7</div>
+      </div>
 
-        // دالة إنشاء تأثير الجزر المتطاير
-        function createFloatingEffect(btn) {
-            const rect = btn.getBoundingClientRect();
-            const containerRect = container.getBoundingClientRect();
-            
-            const carrot = document.createElement('div');
-            carrot.innerText = '🥕';
-            carrot.className = 'floating-carrot';
-            
-            // حساب مكان الظهور بناءً على الزر المضغوط
-            const xPos = rect.left - containerRect.left + (rect.width / 2);
-            const yPos = rect.top - containerRect.top;
-            
-            carrot.style.left = `${xPos}px`;
-            carrot.style.top = `${yPos}px`;
-            
-            container.appendChild(carrot);
-            
-            // إزالة العنصر بعد انتهاء الحركة
-            setTimeout(() => {
-                carrot.remove();
-            }, 1500);
-        }
-    </script>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Made with 💜, bunny magic and carrots 🥕
+  </div>
+
+</div>
 
 </body>
 </html>
+
