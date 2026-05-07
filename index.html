@@ -1,330 +1,311 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رحلة الأرنب إلى قرية الجزر</title>
+    <style>
+        /* استدعاء خط عربي جذاب من جوجل */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap');
 
-<title>ساعد الأرنب 🐰</title>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #e0f7fa; /* لون سماء هادئ */
+            font-family: 'Tajawal', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
 
-<style>
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            border: 5px solid #ffcc80;
+            position: relative;
+            overflow: hidden;
+        }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
-}
+        h1 {
+            color: #f57c00;
+            font-size: 26px;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
 
-body{
-  min-height:100vh;
-  overflow:hidden;
-  background:
-  radial-gradient(circle at top,#7c4dff,#3d1766 60%,#1b102e);
-  color:white;
-  position:relative;
-}
+        p.subtitle {
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
 
-/* نجوم الخلفية */
+        /* مشهد الأرنب والقرية */
+        .scene {
+            position: relative;
+            height: 90px;
+            border-bottom: 5px dashed #81c784; /* عشب */
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-end;
+        }
 
-.stars{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background-image:
-  radial-gradient(white 1px, transparent 1px);
-  background-size:50px 50px;
-  opacity:.2;
-  animation:starsMove 40s linear infinite;
-}
+        .village {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            font-size: 55px;
+            line-height: 1;
+            z-index: 2;
+        }
 
-@keyframes starsMove{
-  from{
-    transform:translateY(0);
-  }
-  to{
-    transform:translateY(50px);
-  }
-}
+        .rabbit {
+            position: absolute;
+            right: 0%;
+            bottom: 0;
+            font-size: 45px;
+            /* حركة انسيابية عند تغير النسبة */
+            transition: right 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 3;
+            /* حركة القفز المستمرة */
+            animation: bounce 0.8s infinite alternate;
+        }
 
-/* المحتوى */
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-12px); }
+        }
 
-.container{
-  position:relative;
-  z-index:2;
-  max-width:1000px;
-  margin:auto;
-  padding:40px 20px;
-  text-align:center;
-}
+        /* شريط التقدم */
+        .progress-bg {
+            background: #eeeeee;
+            height: 28px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-/* العنوان */
+        .progress-fill {
+            background: linear-gradient(90deg, #ffb74d, #ff9800);
+            height: 100%;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            padding-right: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
 
-h1{
-  font-size:55px;
-  margin-top:20px;
-  color:#f5dcff;
-  text-shadow:0 0 20px rgba(255,255,255,.2);
-}
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
 
-.subtitle{
-  margin-top:15px;
-  font-size:20px;
-  opacity:.85;
-  line-height:1.8;
-}
+        /* أزرار التبرع/الدفع */
+        .actions button {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            margin: 5px;
+            box-shadow: 0 4px 10px rgba(255,152,0,0.3);
+        }
 
-/* الكارت */
+        .actions button:hover {
+            background: #f57c00;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255,152,0,0.4);
+        }
 
-.card{
-  margin-top:45px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.1);
-  backdrop-filter:blur(12px);
-  border-radius:35px;
-  padding:40px 25px;
-  box-shadow:0 15px 40px rgba(0,0,0,.25);
-}
+        .actions button:active {
+            transform: translateY(0);
+        }
 
-/* الرحلة */
+        /* لوحة المتصدرين */
+        .leaderboard {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 35px;
+            text-align: right;
+            border: 2px solid #ffe082;
+        }
 
-.journey{
-  position:relative;
-  height:220px;
-  margin-top:20px;
-}
+        .leaderboard h3 {
+            color: #ef6c00;
+            margin-top: 0;
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
 
-/* الطريق */
+        .leaderboard ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-.road{
-  position:absolute;
-  top:110px;
-  left:5%;
-  width:90%;
-  height:20px;
-  border-radius:50px;
-  background:rgba(255,255,255,.15);
-  overflow:hidden;
-}
+        .leaderboard li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 10px;
+            border-bottom: 2px dashed #ffe082;
+            font-weight: bold;
+            color: #5d4037;
+        }
 
-/* التقدم */
+        .leaderboard li:last-child {
+            border-bottom: none;
+        }
 
-.progress{
-  width:47%;
-  height:100%;
-  border-radius:50px;
-  background:
-  linear-gradient(90deg,#ff9dfc,#ffd166);
-  box-shadow:0 0 20px rgba(255,157,252,.6);
-  animation:glow 2s infinite alternate;
-}
+        .leaderboard li span:first-child {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-@keyframes glow{
-  from{
-    filter:brightness(1);
-  }
-  to{
-    filter:brightness(1.2);
-  }
-}
+        /* تأثير الجزر المتطاير */
+        .floating-carrot {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            animation: floatUp 1.5s forwards ease-out;
+            z-index: 10;
+        }
 
-/* الأرنب */
-
-.bunny{
-  position:absolute;
-  left:45%;
-  top:30px;
-  transform:translateX(-50%);
-  font-size:85px;
-  animation:hop 1.3s infinite alternate ease-in-out;
-}
-
-@keyframes hop{
-  from{
-    transform:translate(-50%,0);
-  }
-
-  to{
-    transform:translate(-50%,-12px);
-  }
-}
-
-/* القرية */
-
-.village{
-  position:absolute;
-  right:3%;
-  top:15px;
-  font-size:90px;
-  animation:villageFloat 2s infinite alternate;
-}
-
-@keyframes villageFloat{
-  from{
-    transform:translateY(0);
-  }
-  to{
-    transform:translateY(-8px);
-  }
-}
-
-/* النص */
-
-.percent{
-  margin-top:20px;
-  font-size:32px;
-  font-weight:bold;
-  color:#ffd6ff;
-}
-
-.goal{
-  margin-top:12px;
-  opacity:.8;
-  font-size:18px;
-}
-
-/* الزر */
-
-.btn{
-  margin-top:35px;
-  border:none;
-  padding:18px 35px;
-  border-radius:999px;
-  font-size:20px;
-  cursor:pointer;
-  color:white;
-  background:
-  linear-gradient(135deg,#c77dff,#7b2cbf);
-  transition:.3s;
-  box-shadow:0 10px 25px rgba(199,125,255,.35);
-}
-
-.btn:hover{
-  transform:scale(1.05);
-}
-
-/* المتصدرين */
-
-.top{
-  margin-top:40px;
-}
-
-.top h2{
-  margin-bottom:20px;
-  color:#f5dcff;
-}
-
-.user{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(255,255,255,.08);
-  padding:18px 20px;
-  border-radius:20px;
-  margin-top:15px;
-  transition:.3s;
-}
-
-.user:hover{
-  transform:translateY(-4px);
-  background:rgba(255,255,255,.12);
-}
-
-.money{
-  color:#ffd166;
-  font-weight:bold;
-}
-
-/* الفوتر */
-
-.footer{
-  margin-top:40px;
-  opacity:.65;
-  font-size:15px;
-}
-
-@media(max-width:700px){
-
-  h1{
-    font-size:38px;
-  }
-
-  .subtitle{
-    font-size:16px;
-  }
-
-  .bunny{
-    font-size:60px;
-  }
-
-  .village{
-    font-size:65px;
-  }
-
-}
-
-</style>
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5); opacity: 1; }
+            50% { transform: translateY(-50px) scale(1.2); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="stars"></div>
+    <div class="container" id="main-container">
+        <h1>ساعد الأرنب اللطيف للوصول إلى قريته! 🐰</h1>
+        <p class="subtitle">كل مساهمة تقرب الأرنب خطوة نحو الجزر اللذيذ</p>
 
-<div class="container">
+        <!-- مشهد الأرنب والقرية -->
+        <div class="scene">
+            <div class="village">🏡🥕</div>
+            <div class="rabbit" id="rabbit">🐇</div>
+        </div>
 
-<h1>🐰 Help the bunny reach the carrot</h1>
+        <!-- شريط التقدم -->
+        <div class="progress-bg">
+            <div class="progress-fill" id="progress-fill">0%</div>
+        </div>
+        <div class="stats">
+            <span id="current-amount">المبلغ الحالي: 0$</span>
+            <span id="goal-amount">الهدف: 1000$</span>
+        </div>
 
-<p class="subtitle">
-Every little bit of support helps me achieve my goals and I will be truly grateful 🙏
-</p>
+        <!-- أزرار الدفع -->
+        <div class="actions">
+            <button onclick="addProgress(50, this)">دفع 50$ 🥕</button>
+            <button onclick="addProgress(100, this)">دفع 100$ 🥕</button>
+            <button onclick="addProgress(250, this)">دفع 250$ 🥕</button>
+        </div>
 
-<div class="card">
+        <!-- لوحة المتصدرين -->
+        <div class="leaderboard">
+            <h3>🏆 لوحة شرف المتبرعين</h3>
+            <ul id="leaderboard-list">
+                <li><span>🥇 أحمد سعيد</span> <span>300$</span></li>
+                <li><span>🥈 سارة محمد</span> <span>150$</span></li>
+                <li><span>🥉 فاعل خير</span> <span>100$</span></li>
+            </ul>
+        </div>
+    </div>
 
-<div class="journey">
+    <script>
+        // إعدادات البداية
+        let currentAmount = 0;
+        const goalAmount = 1000;
 
-<div class="road">
-<div class="progress"></div>
-</div>
+        // عناصر الصفحة
+        const progressFill = document.getElementById('progress-fill');
+        const currentAmountText = document.getElementById('current-amount');
+        const rabbit = document.getElementById('rabbit');
+        const container = document.getElementById('main-container');
 
-<div class="bunny">🐰</div>
+        // دالة إضافة التقدم
+        function addProgress(amount, btnElement) {
+            if (currentAmount >= goalAmount) return; // تم الوصول للهدف
 
-<div class="village">🥕</div>
+            currentAmount += amount;
+            if (currentAmount > goalAmount) currentAmount = goalAmount; // لا تتجاوز الهدف
 
-</div>
+            // حساب النسبة المئوية
+            let percentage = (currentAmount / goalAmount) * 100;
 
-<div class="percent">47% مكتمل</div>
+            // تحديث العرض
+            progressFill.style.width = percentage + '%';
+            progressFill.innerText = Math.round(percentage) + '%';
+            currentAmountText.innerText = `المبلغ الحالي: ${currentAmount}$`;
 
-<button class="btn">
-Join the bunny journey 💜
-</button>
+            // تحريك الأرنب (الحد الأقصى 85% حتى لا يختفي خلف القرية)
+            let rabbitPosition = Math.min(percentage, 85);
+            rabbit.style.right = rabbitPosition + '%';
 
-</div>
+            // إنشاء تأثير بصري (جزر متطاير) عند النقر
+            createFloatingEffect(btnElement);
 
-<div class="card top">
+            // رسالة شكر عند اكتمال الهدف
+            if (currentAmount === goalAmount) {
+                setTimeout(() => {
+                    alert("ياي! شكراً لك! لقد وصل الأرنب إلى قرية الجزر بسلام! 🥕🐰🎉");
+                }, 1000);
+            }
+        }
 
-<h2>🏆 المتصدرون</h2>
-
-<div class="user">
-<span>🥇 BunnyHero</span>
-<span class="money">$25</span>
-</div>
-
-<div class="user">
-<span>🥈 MoonRabbit</span>
-<span class="money">$15</span>
-</div>
-
-<div class="user">
-<span>🥉 CarrotKing</span>
-<span class="money">$8</span>
-</div>
-
-</div>
-
-<div class="footer">
-Made with 🐰 and carrots 🥕
-</div>
-
-</div>
+        // دالة إنشاء تأثير الجزر المتطاير
+        function createFloatingEffect(btn) {
+            const rect = btn.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            
+            const carrot = document.createElement('div');
+            carrot.innerText = '🥕';
+            carrot.className = 'floating-carrot';
+            
+            // حساب مكان الظهور بناءً على الزر المضغوط
+            const xPos = rect.left - containerRect.left + (rect.width / 2);
+            const yPos = rect.top - containerRect.top;
+            
+            carrot.style.left = `${xPos}px`;
+            carrot.style.top = `${yPos}px`;
+            
+            container.appendChild(carrot);
+            
+            // إزالة العنصر بعد انتهاء الحركة
+            setTimeout(() => {
+                carrot.remove();
+            }, 1500);
+        }
+    </script>
 
 </body>
 </html>
