@@ -1,127 +1,307 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>Under Construction</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ساعد الأرنب على الوصول 🐰</title>
 
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #0f172a;
-  font-family: Arial;
-  color: white;
-  overflow: hidden;
-}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-/* صندوق الموقع */
-.container {
-  text-align: center;
-}
+    body {
+      background: linear-gradient(to bottom, #ffeef7, #fff7df);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #444;
+    }
 
-/* الأرنب */
-.bunny {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin: auto;
-}
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1px, transparent 1px);
+      background-size: 80px 80px;
+      background-position: 0 0, 40px 40px;
+      animation: moveStars 30s linear infinite;
+    }
 
-/* الرأس */
-.face {
-  width: 100px;
-  height: 100px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 0;
-  left: 10px;
-}
+    @keyframes moveStars {
+      from { transform: translateY(0); }
+      to { transform: translateY(80px); }
+    }
 
-/* الأذن */
-.ear {
-  width: 25px;
-  height: 60px;
-  background: white;
-  border-radius: 20px;
-  position: absolute;
-  top: -40px;
-}
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px 80px;
+      text-align: center;
+    }
 
-.ear.left {
-  left: 15px;
-}
+    h1 {
+      font-size: 52px;
+      margin-bottom: 15px;
+      color: #ff7eb6;
+      text-shadow: 0 3px 10px rgba(255,126,182,0.25);
+    }
 
-.ear.right {
-  right: 15px;
-}
+    .subtitle {
+      font-size: 20px;
+      opacity: 0.85;
+      margin-bottom: 45px;
+      line-height: 1.8;
+    }
 
-/* العيون */
-.eye {
-  width: 10px;
-  height: 10px;
-  background: black;
-  border-radius: 50%;
-  position: absolute;
-  top: 40px;
-}
+    .journey-card {
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 35px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+      margin-bottom: 35px;
+    }
 
-.eye.left { left: 30px; }
-.eye.right { right: 30px; }
+    .journey {
+      position: relative;
+      height: 180px;
+      margin-top: 25px;
+    }
 
-/* الأنف */
-.nose {
-  width: 8px;
-  height: 8px;
-  background: pink;
-  border-radius: 50%;
-  position: absolute;
-  top: 55px;
-  left: 46px;
-}
+    .path {
+      position: absolute;
+      top: 90px;
+      left: 5%;
+      width: 90%;
+      height: 18px;
+      background: #ffe0b2;
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-/* حركة خفيفة */
-.bunny {
-  animation: float 2s infinite ease-in-out;
-}
+    .progress {
+      height: 100%;
+      width: 42%;
+      background: linear-gradient(90deg, #ff9ecb, #ffd86f);
+      border-radius: 50px;
+      animation: glow 2s infinite alternate;
+    }
 
-@keyframes float {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-10px); }
-}
+    @keyframes glow {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.15); }
+    }
 
-/* النص */
-h1 {
-  margin-top: 40px;
-  font-size: 32px;
-}
+    .bunny {
+      position: absolute;
+      top: 30px;
+      left: 40%;
+      font-size: 75px;
+      transform: translateX(-50%);
+      animation: hop 1.3s infinite alternate ease-in-out;
+      transition: left 0.5s;
+    }
 
-p {
-  opacity: 0.7;
-}
+    @keyframes hop {
+      from {
+        transform: translate(-50%, 0px);
+      }
+      to {
+        transform: translate(-50%, -12px);
+      }
+    }
 
-</style>
+    .village {
+      position: absolute;
+      right: 3%;
+      top: 18px;
+      font-size: 90px;
+      animation: floatVillage 2s infinite alternate;
+    }
+
+    @keyframes floatVillage {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-8px); }
+    }
+
+    .percentage {
+      margin-top: 30px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #ff7eb6;
+    }
+
+    .goal-text {
+      margin-top: 12px;
+      font-size: 18px;
+      opacity: 0.85;
+    }
+
+    .support-btn {
+      margin-top: 35px;
+      background: linear-gradient(135deg, #ff8cc6, #ffca6f);
+      color: white;
+      border: none;
+      padding: 18px 38px;
+      border-radius: 999px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 10px 20px rgba(255,126,182,0.3);
+    }
+
+    .support-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 25px rgba(255,126,182,0.4);
+    }
+
+    .leaders {
+      margin-top: 30px;
+      display: grid;
+      gap: 15px;
+    }
+
+    .leader {
+      background: rgba(255,255,255,0.7);
+      padding: 18px 22px;
+      border-radius: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      transition: 0.3s;
+    }
+
+    .leader:hover {
+      transform: translateY(-4px);
+    }
+
+    .rank {
+      font-size: 22px;
+    }
+
+    .name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .amount {
+      color: #ff7eb6;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 45px;
+      opacity: 0.7;
+      font-size: 15px;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .bunny {
+        font-size: 58px;
+      }
+
+      .village {
+        font-size: 65px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+
+<div class="stars"></div>
 
 <div class="container">
 
-  <div class="bunny">
-    <div class="ear left"></div>
-    <div class="ear right"></div>
-    <div class="face">
-      <div class="eye left"></div>
-      <div class="eye right"></div>
-      <div class="nose"></div>
+  <h1>🐰 ساعد الأرنب على الوصول</h1>
+
+  <p class="subtitle">
+    كل دعم صغير يساعد الأرنب يقترب خطوة إضافية من قرية الجزر اللطيفة 🥕✨
+  </p>
+
+  <div class="journey-card">
+
+    <div class="journey">
+
+      <div class="path">
+        <div class="progress"></div>
+      </div>
+
+      <div class="bunny">🐰</div>
+
+      <div class="village">🥕🏡</div>
+
     </div>
+
+    <div class="percentage">42% مكتمل</div>
+
+    <div class="goal-text">
+      الأرنب يقترب من قرية الجزر الجميلة...
+    </div>
+
+    <button class="support-btn">
+      💖 ادفع خطوة للأمام
+    </button>
+
   </div>
 
-  <h1>🚧 The site is under construction</h1>
-  <p>The website will likely be launched soon. 🐰</p>
+  <div class="journey-card">
+
+    <h2 style="margin-bottom:25px;color:#ff7eb6;">🏆 المتصدرون</h2>
+
+    <div class="leaders">
+
+      <div class="leader">
+        <div>
+          <span class="rank">🥇</span>
+          <span class="name">BunnyHero</span>
+        </div>
+        <div class="amount">$20</div>
+      </div>
+
+      <div class="leader">
+        <div>
+          <span class="rank">🥈</span>
+          <span class="name">CarrotKing</span>
+        </div>
+        <div class="amount">$12</div>
+      </div>
+
+      <div class="leader">
+        <div>
+          <span class="rank">🥉</span>
+          <span class="name">MoonRabbit</span>
+        </div>
+        <div class="amount">$7</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Made with 🐰 and carrots 🥕
+  </div>
 
 </div>
 
