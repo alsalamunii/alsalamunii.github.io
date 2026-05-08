@@ -1,481 +1,366 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magical Bunny Journey</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-top: #1f103f;
-            --bg-bottom: #5b376d;
-            --primary: #fbc2eb;
-            --secondary: #a18cd1;
-            --text-light: #fff0f5;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glow: 0 0 20px rgba(251, 194, 235, 0.6);
+// ===========================
+// STATE MANAGEMENT
+// ===========================
+
+let state = {
+    totalDonated: 0,
+    totalSupporters: 0,
+    supporters: [],
+    selectedAmount: 0,
+};
+
+// Load state from localStorage
+function loadState() {
+    const saved = localStorage.getItem('bunnyJourneyState');
+    if (saved) {
+        state = JSON.parse(saved);
+        updateUI();
+    }
+}
+
+// Save state to localStorage
+function saveState() {
+    localStorage.setItem('bunnyJourneyState', JSON.stringify(state));
+}
+
+// ===========================
+// SUPPORT FUNCTIONS
+// ===========================
+
+function selectAmount(amount) {
+    state.selectedAmount = amount;
+    document.getElementById('customAmount').value = '';
+    
+    // Update button states
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.closest('.preset-btn').classList.add('active');
+}
+
+function processSupport() {
+    let amount = state.selectedAmount;
+    
+    // Get custom amount if no preset selected
+    if (amount === 0) {
+        const customAmount = parseFloat(document.getElementById('customAmount').value);
+        if (!customAmount || customAmount <= 0) {
+            showAlert('Please select or enter an amount! 💝');
+            return;
         }
+        amount = customAmount;
+    }
+    
+    const supporterName = document.getElementById('supporterName').value || 'Anonymous Bunny Friend';
+    
+    // Add to supporters
+    const supporter = {
+        name: supporterName,
+        amount: amount,
+        timestamp: new Date()
+    };
+    
+    state.supporters.unshift(supporter);
+    state.totalDonated += amount;
+    state.totalSupporters += 1;
+    
+    // Save state
+    saveState();
+    
+    // Celebrate!
+    celebrate();
+    
+    // Update UI
+    updateUI();
+    
+    // Clear form
+    document.getElementById('customAmount').value = '';
+    document.getElementById('supporterName').value = '';
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    state.selectedAmount = 0;
+    
+    // Show success message
+    showAlert(`Thank you ${supporterName}! The bunny hopped forward! 🐰✨`, 'success');
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+function showAlert(message, type = 'info') {
+    // Create alert element
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+    alert.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#a89dd9' : '#b89dd9'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 2000;
+        animation: slideInRight 0.3s ease-out;
+        font-weight: 600;
+    `;
+    
+    document.body.appendChild(alert);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        alert.style.animation = 'slideOutRight 0.3s ease-out forwards';
+        setTimeout(() => alert.remove(), 300);
+    }, 3000);
+}
 
-        body {
-            font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom), #8b688c);
-            background-attachment: fixed;
-            color: var(--text-light);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Floating Stars Background */
-        .stars-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 10px white;
-            animation: twinkle infinite alternate;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.2; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.2); }
-        }
-
-        /* Main Layout */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Glassmorphism Classes */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Hero Section */
-        header {
-            text-align: center;
-            padding: 4rem 2rem;
-            margin-bottom: 2rem;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #fff;
-            text-shadow: var(--glow);
-        }
-
-        h1 span {
-            display: inline-block;
-            animation: hop 2s infinite;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #e5d9f2;
-            margin-bottom: 2rem;
-            font-weight: 500;
-        }
-
-        /* Buttons */
-        .btn {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: #2b1055;
-            border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
-            font-family: inherit;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: var(--glow);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 30px rgba(251, 194, 235, 0.9);
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        /* Journey Section */
-        .journey-section {
-            padding: 3rem 2rem;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .journey-title {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            color: #fff;
-        }
-
-        /* Progress Bar */
-        .path-container {
-            position: relative;
-            width: 100%;
-            height: 24px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
-            margin: 4rem 0 3rem 0;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .path-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-            border-radius: 20px;
-            box-shadow: 0 0 20px #fecfef;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-
-        .bunny {
-            position: absolute;
-            right: -25px; /* Centers the bunny on the leading edge */
-            top: -45px;
-            font-size: 3rem;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
-            transition: transform 0.3s ease;
-            z-index: 2;
-        }
-
-        .hopping {
-            animation: active-hop 0.5s ease-out;
-        }
-
-        .village {
-            position: absolute;
-            right: -20px;
-            top: -55px;
-            font-size: 3.5rem;
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
-            z-index: 1;
-        }
-
-        .progress-stats {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(251, 194, 235, 0.4);
-        }
-
-        /* Leaderboard */
-        .leaderboard {
-            padding: 3rem 2rem;
-        }
-
-        .leaderboard h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .supporter-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: transform 0.3s ease, background 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .supporter-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: var(--glow);
-        }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--secondary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            border: 2px solid white;
-        }
-
-        .supporter-info h4 {
-            font-size: 1.1rem;
-            color: #fff;
-        }
-
-        .supporter-info p {
-            font-size: 0.9rem;
-            color: #e5d9f2;
-        }
-
-        .rank-icon {
-            margin-left: auto;
-            font-size: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes hop {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        @keyframes active-hop {
-            0% { transform: translateY(0) scaleY(1); }
-            50% { transform: translateY(-30px) scaleY(1.1); }
-            100% { transform: translateY(0) scaleY(0.95); }
-        }
-
-        /* Click Particles */
-        .particle {
-            position: fixed;
-            pointer-events: none;
-            font-size: 1.5rem;
-            animation: float-up 1s ease-out forwards;
-            z-index: 100;
-        }
-
-        @keyframes float-up {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(0); opacity: 0; }
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
-            .bunny { font-size: 2.5rem; top: -35px; }
-            .village { font-size: 2.8rem; top: -45px; }
-            header { padding: 3rem 1.5rem; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="stars-container" id="stars"></div>
-
-    <div class="container">
-        <!-- Hero Section -->
-        <header class="glass">
-            <h1><span>🐰</span> Hop to the Magical Village! ✨</h1>
-            <p class="subtitle">Pip the Bunny is trying to reach his dream home made of carrots. Your support clears the path and guides him home!</p>
-            <button class="btn" onclick="document.getElementById('journey').scrollIntoView({behavior: 'smooth'})">
-                Join the Journey
-            </button>
-        </header>
-
-        <!-- Bunny Journey Section -->
-        <section id="journey" class="journey-section glass">
-            <h2 class="journey-title">The Carrot Trail 🐾</h2>
-            
-            <div class="path-container">
-                <div class="path-fill" id="path-fill">
-                    <div class="bunny" id="bunny">🐇</div>
-                </div>
-                <div class="village" title="Carrot Village">🥕🏡</div>
-            </div>
-
-            <div class="progress-stats" id="progress-text">0% Completed</div>
-            
-            <button class="btn" id="donate-btn">
-                Give a Carrot 🥕 (Support)
-            </button>
-            <p style="margin-top: 15px; font-size: 0.9rem; color: #e5d9f2; font-weight: 300;">
-                Every carrot moves Pip 5% closer to home!
-            </p>
-        </section>
-
-        <!-- Top Supporters / Leaderboard -->
-        <section class="leaderboard glass">
-            <h2>Top Friends 👑</h2>
-            <div class="cards-grid">
-                <!-- Supporter 1 -->
-                <div class="supporter-card">
-                    <div class="avatar">🐱</div>
-                    <div class="supporter-info">
-                        <h4>Luna Starlight</h4>
-                        <p>Gifted 50 Carrots</p>
-                    </div>
-                    <div class="rank-icon">🥇</div>
-                </div>
-                <!-- Supporter 2 -->
-                <div class="supporter-card">
-                    <div class="avatar">🐶</div>
-                    <div class="supporter-info">
-                        <h4>Oliver Paws</h4>
-                        <p>Gifted 35 Carrots</p>
-                    </div>
-                    <div class="rank-icon">🥈</div>
-                </div>
-                <!-- Supporter 3 -->
-                <div class="supporter-card">
-                    <div class="avatar">🦊</div>
-                    <div class="supporter-info">
-                        <h4>Milo Forest</h4>
-                        <p>Gifted 20 Carrots</p>
-                    </div>
-                    <div class="rank-icon">🥉</div>
-                </div>
-            </div>
-        </section>
-
-        <footer>
-            <p>Made with 💜 and lots of 🥕 for the little bunnies.</p>
-        </footer>
-    </div>
-
-    <script>
-        // --- Starry Background Generation ---
-        function createStars() {
-            const container = document.getElementById('stars');
-            const starCount = 50;
-
-            for (let i = 0; i < starCount; i++) {
-                let star = document.createElement('div');
-                star.className = 'star';
-                
-                // Randomize positions, sizes, and animation delays
-                let xy = Math.random() * 100;
-                let duration = Math.random() * (3 - 1) + 1;
-                let size = Math.random() * 4;
-                
-                star.style.left = Math.random() * 100 + 'vw';
-                star.style.top = Math.random() * 100 + 'vh';
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.animationDuration = duration + 's';
-                star.style.animationDelay = Math.random() * 2 + 's';
-                
-                container.appendChild(star);
-            }
-        }
-        createStars();
-
-        // --- Interaction Logic ---
-        let currentProgress = 0;
-        const progressAmount = 5; // Adds 5% per click
+function celebrate() {
+    const celebrationContainer = document.getElementById('celebrationContainer');
+    const emojis = ['🎉', '🥕', '✨', '💕', '🐰', '⭐', '🌟', '💫'];
+    
+    for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
         
-        const pathFill = document.getElementById('path-fill');
-        const bunny = document.getElementById('bunny');
-        const progressText = document.getElementById('progress-text');
-        const donateBtn = document.getElementById('donate-btn');
+        const emoji = document.createElement('span');
+        emoji.className = 'confetti-piece';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        
+        const x = Math.random() * window.innerWidth;
+        const delay = Math.random() * 0.2;
+        const duration = 2 + Math.random() * 1;
+        
+        confetti.style.left = x + 'px';
+        confetti.style.top = '0px';
+        
+        emoji.style.animation = `confettiFall ${duration}s ease-out ${delay}s forwards`;
+        
+        confetti.appendChild(emoji);
+        celebrationContainer.appendChild(confetti);
+        
+        // Clean up
+        setTimeout(() => confetti.remove(), (duration + delay) * 1000);
+    }
+}
 
-        donateBtn.addEventListener('click', (e) => {
-            if (currentProgress >= 100) return;
+// ===========================
+// UI UPDATE FUNCTIONS
+// ===========================
 
-            // Update Progress
-            currentProgress += progressAmount;
-            if (currentProgress > 100) currentProgress = 100;
+function updateUI() {
+    updateProgress();
+    updateStats();
+    updateLeaderboard();
+}
 
-            // Visual Updates
-            pathFill.style.width = currentProgress + '%';
-            progressText.innerText = currentProgress + '% Completed';
+function updateProgress() {
+    // Calculate progress (every $5 = 1 unit, let's say we need $500 total = 100%)
+    const progressPercentage = Math.min((state.totalDonated / 500) * 100, 100);
+    
+    // Update path fill
+    const pathFill = document.getElementById('pathFill');
+    pathFill.style.width = progressPercentage + '%';
+    
+    // Update bunny position
+    const bunnyCharacter = document.getElementById('bunnyCharacter');
+    bunnyCharacter.style.left = progressPercentage + '%';
+    
+    // Update percentage text
+    document.getElementById('progressPercentage').textContent = Math.round(progressPercentage) + '%';
+}
 
-            // Bunny Hop Animation Trigger
-            bunny.classList.remove('hopping');
-            void bunny.offsetWidth; // Trigger reflow to restart animation
-            bunny.classList.add('hopping');
+function updateStats() {
+    document.getElementById('totalSupporters').textContent = state.totalSupporters;
+    document.getElementById('carrotsEarned').textContent = Math.floor(state.totalDonated / 10);
+}
 
-            // Spawn cute particles at mouse click
-            spawnParticles(e.clientX, e.clientY);
-
-            // Completion State
-            if (currentProgress === 100) {
-                donateBtn.innerText = "Pip Made It! 🎉";
-                donateBtn.style.background = "linear-gradient(90deg, #ff9a9e, #fecfef)";
-                donateBtn.style.cursor = "default";
-                progressText.innerText = "100% - Welcome to the Village!";
-                celebrationEffect();
+function updateLeaderboard() {
+    const leaderboardList = document.getElementById('leaderboardList');
+    const emptyLeaderboard = document.getElementById('emptyLeaderboard');
+    
+    if (state.supporters.length === 0) {
+        leaderboardList.style.display = 'none';
+        emptyLeaderboard.style.display = 'block';
+        return;
+    }
+    
+    leaderboardList.style.display = 'flex';
+    emptyLeaderboard.style.display = 'none';
+    
+    leaderboardList.innerHTML = state.supporters
+        .slice(0, 10) // Top 10
+        .map((supporter, index) => {
+            let rankClass = 'rank-other';
+            let rankIcon = `#${index + 1}`;
+            
+            if (index === 0) {
+                rankClass = 'rank-1';
+                rankIcon = '🥇';
+            } else if (index === 1) {
+                rankClass = 'rank-2';
+                rankIcon = '🥈';
+            } else if (index === 2) {
+                rankClass = 'rank-3';
+                rankIcon = '🥉';
             }
+            
+            return `
+                <div class="leaderboard-item">
+                    <div class="rank-badge ${rankClass}">${rankIcon}</div>
+                    <div class="supporter-info">
+                        <div class="supporter-name">${escapeHtml(supporter.name)}</div>
+                        <div class="supporter-amount">Supported with $${supporter.amount.toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+        })
+        .join('');
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ===========================
+// SCROLL FUNCTIONS
+// ===========================
+
+function scrollToJourney() {
+    const journeySection = document.getElementById('journey-section');
+    journeySection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ===========================
+// PARTICLES BACKGROUND
+// ===========================
+
+function createFloatingStars() {
+    const background = document.querySelector('.stars-background');
+    
+    // This is handled by CSS now, but we can enhance with JavaScript if needed
+    // The CSS pseudo-elements create the starfield effect
+}
+
+// ===========================
+// RESPONSIVE ANIMATIONS
+// ===========================
+
+function adjustAnimationsForDevice() {
+    // Reduce animations on mobile devices for better performance
+    if (window.innerWidth < 768) {
+        // Could add mobile-specific animation styles here
+    }
+}
+
+// ===========================
+// KEYBOARD SHORTCUTS
+// ===========================
+
+document.addEventListener('keydown', (e) => {
+    // Support button on Enter
+    if (e.key === 'Enter' && document.activeElement.id === 'customAmount') {
+        processSupport();
+    }
+});
+
+// ===========================
+// INITIALIZATION
+// ===========================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Load saved state
+    loadState();
+    
+    // Adjust animations for device
+    adjustAnimationsForDevice();
+    
+    // Add keyboard shortcut hints (optional)
+    console.log('🐰 Bunny\'s Journey loaded! Help the bunny reach the carrot village! ✨');
+    
+    // Add some cute console messages
+    console.log('%c🐰 Welcome to Bunny\'s Journey! 🥕', 'font-size: 20px; color: #b89dd9; font-weight: bold;');
+    console.log('%cMay your support bring joy and magic to the bunny\'s path! ✨', 'font-size: 14px; color: #9d7eb8;');
+});
+
+// ===========================
+// WINDOW RESIZE HANDLER
+// ===========================
+
+window.addEventListener('resize', () => {
+    adjustAnimationsForDevice();
+});
+
+// ===========================
+// PAGE VISIBILITY HANDLER
+// ===========================
+
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Page is hidden - could pause animations if needed
+    } else {
+        // Page is visible - resume
+    }
+});
+
+// ===========================
+// ERROR HANDLING
+// ===========================
+
+window.addEventListener('error', (e) => {
+    console.error('🐰 Oops! An error occurred:', e.error);
+});
+
+// ===========================
+// SMOOTH ANIMATIONS ON SCROLL
+// ===========================
+
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe elements for fade-in on scroll
+document.querySelectorAll('.leaderboard-item, .fact-card, .stat-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'all 0.5s ease-out';
+    observer.observe(el);
+});
+
+// ===========================
+// ACTIVE PRESET BUTTON TRACKING
+// ===========================
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+// ===========================
+// CUSTOM AMOUNT INTERACTION
+// ===========================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const customAmountInput = document.getElementById('customAmount');
+    
+    customAmountInput.addEventListener('focus', () => {
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.classList.remove('active');
         });
+        state.selectedAmount = 0;
+    });
+});
 
-        // --- Cute Particle Effects ---
-        function spawnParticles(x, y) {
-            const emojis = ['🥕', '✨', '💖'];
-            for (let i = 0; i < 3; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                
-                // Random offset around the click
-                const offsetX = (Math.random() - 0.5) * 50;
-                particle.style.left = (x + offsetX) + 'px';
-                particle.style.top = y + 'px';
-                
-                document.body.appendChild(particle);
-
-                // Clean up DOM after animation
-                setTimeout(() => {
-                    particle.remove();
-                }, 1000);
-            }
-        }
-
-        // --- Grand Celebration when reaching 100% ---
-        function celebrationEffect() {
-            let interval = setInterval(() => {
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight;
-                spawnParticles(x, y);
-            }, 200);
-
-            setTimeout(() => clearInterval(interval), 3000); // Stop after 3 seconds
-        }
-    </script>
-</body>
-</html>
 
