@@ -57,7 +57,7 @@ function processSupport() {
     const supporter = {
         name: supporterName,
         amount: amount,
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
     };
     
     state.supporters.unshift(supporter);
@@ -115,6 +115,8 @@ function showAlert(message, type = 'info') {
 
 function celebrate() {
     const celebrationContainer = document.getElementById('celebrationContainer');
+    if (!celebrationContainer) return; // Guard against missing container
+    
     const emojis = ['🎉', '🥕', '✨', '💕', '🐰', '⭐', '🌟', '💫'];
     
     for (let i = 0; i < 30; i++) {
@@ -158,24 +160,40 @@ function updateProgress() {
     
     // Update path fill
     const pathFill = document.getElementById('pathFill');
-    pathFill.style.width = progressPercentage + '%';
+    if (pathFill) {
+        pathFill.style.width = progressPercentage + '%';
+    }
     
     // Update bunny position
     const bunnyCharacter = document.getElementById('bunnyCharacter');
-    bunnyCharacter.style.left = progressPercentage + '%';
+    if (bunnyCharacter) {
+        bunnyCharacter.style.left = progressPercentage + '%';
+    }
     
     // Update percentage text
-    document.getElementById('progressPercentage').textContent = Math.round(progressPercentage) + '%';
+    const progressPercentageEl = document.getElementById('progressPercentage');
+    if (progressPercentageEl) {
+        progressPercentageEl.textContent = Math.round(progressPercentage) + '%';
+    }
 }
 
 function updateStats() {
-    document.getElementById('totalSupporters').textContent = state.totalSupporters;
-    document.getElementById('carrotsEarned').textContent = Math.floor(state.totalDonated / 10);
+    const totalSupportersEl = document.getElementById('totalSupporters');
+    if (totalSupportersEl) {
+        totalSupportersEl.textContent = state.totalSupporters;
+    }
+    
+    const carrotsEarnedEl = document.getElementById('carrotsEarned');
+    if (carrotsEarnedEl) {
+        carrotsEarnedEl.textContent = Math.floor(state.totalDonated / 10);
+    }
 }
 
 function updateLeaderboard() {
     const leaderboardList = document.getElementById('leaderboardList');
     const emptyLeaderboard = document.getElementById('emptyLeaderboard');
+    
+    if (!leaderboardList || !emptyLeaderboard) return; // Guard against missing elements
     
     if (state.supporters.length === 0) {
         leaderboardList.style.display = 'none';
@@ -228,7 +246,9 @@ function escapeHtml(text) {
 
 function scrollToJourney() {
     const journeySection = document.getElementById('journey-section');
-    journeySection.scrollIntoView({ behavior: 'smooth' });
+    if (journeySection) {
+        journeySection.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 // ===========================
@@ -281,7 +301,67 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add some cute console messages
     console.log('%c🐰 Welcome to Bunny\'s Journey! 🥕', 'font-size: 20px; color: #b89dd9; font-weight: bold;');
     console.log('%cMay your support bring joy and magic to the bunny\'s path! ✨', 'font-size: 14px; color: #9d7eb8;');
+    
+    // Setup preset buttons
+    setupPresetButtons();
+    
+    // Setup custom amount input
+    setupCustomAmountInput();
+    
+    // Setup scroll animations
+    setupScrollAnimations();
 });
+
+// ===========================
+// SETUP FUNCTIONS
+// ===========================
+
+function setupPresetButtons() {
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const amount = parseFloat(this.getAttribute('data-amount'));
+            if (!isNaN(amount)) {
+                selectAmount(amount);
+            }
+        });
+    });
+}
+
+function setupCustomAmountInput() {
+    const customAmountInput = document.getElementById('customAmount');
+    if (customAmountInput) {
+        customAmountInput.addEventListener('focus', () => {
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            state.selectedAmount = 0;
+        });
+    }
+}
+
+function setupScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements for fade-in on scroll
+    document.querySelectorAll('.leaderboard-item, .fact-card, .stat-card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'all 0.5s ease-out';
+        observer.observe(el);
+    });
+}
 
 // ===========================
 // WINDOW RESIZE HANDLER
@@ -311,56 +391,5 @@ window.addEventListener('error', (e) => {
     console.error('🐰 Oops! An error occurred:', e.error);
 });
 
-// ===========================
-// SMOOTH ANIMATIONS ON SCROLL
-// ===========================
-
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observe elements for fade-in on scroll
-document.querySelectorAll('.leaderboard-item, .fact-card, .stat-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'all 0.5s ease-out';
-    observer.observe(el);
-});
-
-// ===========================
-// ACTIVE PRESET BUTTON TRACKING
-// ===========================
-
-document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    });
-});
-
-// ===========================
-// CUSTOM AMOUNT INTERACTION
-// ===========================
-
-document.addEventListener('DOMContentLoaded', () => {
-    const customAmountInput = document.getElementById('customAmount');
-    
-    customAmountInput.addEventListener('focus', () => {
-        document.querySelectorAll('.preset-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        state.selectedAmount = 0;
-    });
-});
 
 
