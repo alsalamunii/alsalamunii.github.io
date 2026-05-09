@@ -1,395 +1,218 @@
-// ===========================
-// STATE MANAGEMENT
-// ===========================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bunny's Journey to the Magical Carrot Village</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background"></div>
+    <div class="floating-particles"></div>
 
-let state = {
-    totalDonated: 0,
-    totalSupporters: 0,
-    supporters: [],
-    selectedAmount: 0,
-};
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🐰</span>
+                <span class="logo-text">Bunny's Journey</span>
+            </div>
+        </div>
+    </nav>
 
-// Load state from localStorage
-function loadState() {
-    const saved = localStorage.getItem('bunnyJourneyState');
-    if (saved) {
-        state = JSON.parse(saved);
-        updateUI();
-    }
-}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Help the Bunny<br>Reach the Magical<br><span class="gradient-text">Carrot Village</span></h1>
+                <p class="hero-subtitle">Embark on a dreamy adventure! Every little bit of support helps our precious bunny hop closer to home, where the sweetest carrots grow in fields of starlight.</p>
+                <button class="cta-button primary-btn" onclick="scrollToJourney()">
+                    <span class="btn-icon">✨</span> Support the Journey
+                </button>
+            </div>
+            <div class="hero-illustration">
+                <div class="bunny-hero">
+                    <div class="bunny-ears"></div>
+                    <div class="bunny-head"></div>
+                    <div class="bunny-body"></div>
+                </div>
+                <div class="floating-elements">
+                    <div class="float-1">🥕</div>
+                    <div class="float-2">✨</div>
+                    <div class="float-3">⭐</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-// Save state to localStorage
-function saveState() {
-    localStorage.setItem('bunnyJourneyState', JSON.stringify(state));
-}
+    <!-- Bunny Journey Section -->
+    <section class="journey-section" id="journey-section">
+        <div class="section-container">
+            <h2 class="section-title">The Magical Path</h2>
+            <p class="section-subtitle">Watch the bunny hop closer to its dream destination</p>
 
-// ===========================
-// SUPPORT FUNCTIONS
-// ===========================
-
-function selectAmount(amount) {
-    state.selectedAmount = amount;
-    document.getElementById('customAmount').value = '';
-    
-    // Update button states
-    document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.closest('.preset-btn').classList.add('active');
-}
-
-function processSupport() {
-    let amount = state.selectedAmount;
-    
-    // Get custom amount if no preset selected
-    if (amount === 0) {
-        const customAmount = parseFloat(document.getElementById('customAmount').value);
-        if (!customAmount || customAmount <= 0) {
-            showAlert('Please select or enter an amount! 💝');
-            return;
-        }
-        amount = customAmount;
-    }
-    
-    const supporterName = document.getElementById('supporterName').value || 'Anonymous Bunny Friend';
-    
-    // Add to supporters
-    const supporter = {
-        name: supporterName,
-        amount: amount,
-        timestamp: new Date().toISOString()
-    };
-    
-    state.supporters.unshift(supporter);
-    state.totalDonated += amount;
-    state.totalSupporters += 1;
-    
-    // Save state
-    saveState();
-    
-    // Celebrate!
-    celebrate();
-    
-    // Update UI
-    updateUI();
-    
-    // Clear form
-    document.getElementById('customAmount').value = '';
-    document.getElementById('supporterName').value = '';
-    document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    state.selectedAmount = 0;
-    
-    // Show success message
-    showAlert(`Thank you ${supporterName}! The bunny hopped forward! 🐰✨`, 'success');
-}
-
-function showAlert(message, type = 'info') {
-    // Create alert element
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.textContent = message;
-    alert.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#a89dd9' : '#b89dd9'};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        z-index: 2000;
-        animation: slideInRight 0.3s ease-out;
-        font-weight: 600;
-    `;
-    
-    document.body.appendChild(alert);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        alert.style.animation = 'slideOutRight 0.3s ease-out forwards';
-        setTimeout(() => alert.remove(), 300);
-    }, 3000);
-}
-
-function celebrate() {
-    const celebrationContainer = document.getElementById('celebrationContainer');
-    if (!celebrationContainer) return; // Guard against missing container
-    
-    const emojis = ['🎉', '🥕', '✨', '💕', '🐰', '⭐', '🌟', '💫'];
-    
-    for (let i = 0; i < 30; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        
-        const emoji = document.createElement('span');
-        emoji.className = 'confetti-piece';
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        
-        const x = Math.random() * window.innerWidth;
-        const delay = Math.random() * 0.2;
-        const duration = 2 + Math.random() * 1;
-        
-        confetti.style.left = x + 'px';
-        confetti.style.top = '0px';
-        
-        emoji.style.animation = `confettiFall ${duration}s ease-out ${delay}s forwards`;
-        
-        confetti.appendChild(emoji);
-        celebrationContainer.appendChild(confetti);
-        
-        // Clean up
-        setTimeout(() => confetti.remove(), (duration + delay) * 1000);
-    }
-}
-
-// ===========================
-// UI UPDATE FUNCTIONS
-// ===========================
-
-function updateUI() {
-    updateProgress();
-    updateStats();
-    updateLeaderboard();
-}
-
-function updateProgress() {
-    // Calculate progress (every $5 = 1 unit, let's say we need $500 total = 100%)
-    const progressPercentage = Math.min((state.totalDonated / 500) * 100, 100);
-    
-    // Update path fill
-    const pathFill = document.getElementById('pathFill');
-    if (pathFill) {
-        pathFill.style.width = progressPercentage + '%';
-    }
-    
-    // Update bunny position
-    const bunnyCharacter = document.getElementById('bunnyCharacter');
-    if (bunnyCharacter) {
-        bunnyCharacter.style.left = progressPercentage + '%';
-    }
-    
-    // Update percentage text
-    const progressPercentageEl = document.getElementById('progressPercentage');
-    if (progressPercentageEl) {
-        progressPercentageEl.textContent = Math.round(progressPercentage) + '%';
-    }
-}
-
-function updateStats() {
-    const totalSupportersEl = document.getElementById('totalSupporters');
-    if (totalSupportersEl) {
-        totalSupportersEl.textContent = state.totalSupporters;
-    }
-    
-    const carrotsEarnedEl = document.getElementById('carrotsEarned');
-    if (carrotsEarnedEl) {
-        carrotsEarnedEl.textContent = Math.floor(state.totalDonated / 10);
-    }
-}
-
-function updateLeaderboard() {
-    const leaderboardList = document.getElementById('leaderboardList');
-    const emptyLeaderboard = document.getElementById('emptyLeaderboard');
-    
-    if (!leaderboardList || !emptyLeaderboard) return; // Guard against missing elements
-    
-    if (state.supporters.length === 0) {
-        leaderboardList.style.display = 'none';
-        emptyLeaderboard.style.display = 'block';
-        return;
-    }
-    
-    leaderboardList.style.display = 'flex';
-    emptyLeaderboard.style.display = 'none';
-    
-    leaderboardList.innerHTML = state.supporters
-        .slice(0, 10) // Top 10
-        .map((supporter, index) => {
-            let rankClass = 'rank-other';
-            let rankIcon = `#${index + 1}`;
-            
-            if (index === 0) {
-                rankClass = 'rank-1';
-                rankIcon = '🥇';
-            } else if (index === 1) {
-                rankClass = 'rank-2';
-                rankIcon = '🥈';
-            } else if (index === 2) {
-                rankClass = 'rank-3';
-                rankIcon = '🥉';
-            }
-            
-            return `
-                <div class="leaderboard-item">
-                    <div class="rank-badge ${rankClass}">${rankIcon}</div>
-                    <div class="supporter-info">
-                        <div class="supporter-name">${escapeHtml(supporter.name)}</div>
-                        <div class="supporter-amount">Supported with $${supporter.amount.toFixed(2)}</div>
+            <!-- Main Journey Container -->
+            <div class="journey-container">
+                <!-- Path and Bunny -->
+                <div class="path-wrapper">
+                    <div class="journey-path">
+                        <div class="path-fill" id="pathFill"></div>
+                        <div class="bunny-character" id="bunnyCharacter">
+                            <div class="bunny-ears-small"></div>
+                            <div class="bunny-head-small"></div>
+                            <div class="bunny-body-small"></div>
+                        </div>
+                    </div>
+                    <div class="path-labels">
+                        <span class="start-label">Home 🏡</span>
+                        <span class="end-label">Carrot Village 🥕</span>
                     </div>
                 </div>
-            `;
-        })
-        .join('');
-}
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+                <!-- Progress Stats -->
+                <div class="progress-stats">
+                    <div class="stat-card">
+                        <span class="stat-label">Distance Traveled</span>
+                        <span class="stat-value" id="progressPercentage">0%</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Total Supporters</span>
+                        <span class="stat-value" id="totalSupporters">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Carrots Earned</span>
+                        <span class="stat-value" id="carrotsEarned">0</span>
+                    </div>
+                </div>
 
-// ===========================
-// SCROLL FUNCTIONS
-// ===========================
+                <!-- Support Form -->
+                <div class="support-card glassmorphism">
+                    <h3 class="card-title">Help the Bunny</h3>
+                    <p class="card-subtitle">Choose how much support you'd like to give</p>
 
-function scrollToJourney() {
-    const journeySection = document.getElementById('journey-section');
-    if (journeySection) {
-        journeySection.scrollIntoView({ behavior: 'smooth' });
-    }
-}
+                    <!-- Preset Amounts -->
+                    <div class="support-presets">
+                        <button class="preset-btn" onclick="selectAmount(5)">
+                            <span class="amount">$5</span>
+                            <span class="desc">1 Hop</span>
+                        </button>
+                        <button class="preset-btn" onclick="selectAmount(10)">
+                            <span class="amount">$10</span>
+                            <span class="desc">2 Hops</span>
+                        </button>
+                        <button class="preset-btn" onclick="selectAmount(25)">
+                            <span class="amount">$25</span>
+                            <span class="desc">5 Hops</span>
+                        </button>
+                        <button class="preset-btn" onclick="selectAmount(50)">
+                            <span class="amount">$50</span>
+                            <span class="desc">10 Hops</span>
+                        </button>
+                    </div>
 
-// ===========================
-// PARTICLES BACKGROUND
-// ===========================
+                    <!-- Custom Amount -->
+                    <div class="custom-amount">
+                        <label for="customAmount">Custom Amount</label>
+                        <div class="input-group">
+                            <span class="currency">$</span>
+                            <input type="number" id="customAmount" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                    </div>
 
-function createFloatingStars() {
-    const background = document.querySelector('.stars-background');
-    
-    // This is handled by CSS now, but we can enhance with JavaScript if needed
-    // The CSS pseudo-elements create the starfield effect
-}
+                    <!-- Name Input -->
+                    <div class="name-input">
+                        <label for="supporterName">Your Name (optional)</label>
+                        <input type="text" id="supporterName" placeholder="Magical Friend ✨">
+                    </div>
 
-// ===========================
-// RESPONSIVE ANIMATIONS
-// ===========================
+                    <!-- Support Button -->
+                    <button class="cta-button primary-btn full-width" onclick="processSupport()">
+                        <span class="btn-icon">💝</span> Support the Journey
+                    </button>
 
-function adjustAnimationsForDevice() {
-    // Reduce animations on mobile devices for better performance
-    if (window.innerWidth < 768) {
-        // Could add mobile-specific animation styles here
-    }
-}
+                    <p class="support-note">🐰 Every donation helps! Even $1 makes a difference.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-// ===========================
-// KEYBOARD SHORTCUTS
-// ===========================
+    <!-- Leaderboard Section -->
+    <section class="leaderboard-section">
+        <div class="section-container">
+            <h2 class="section-title">Top Supporters 👑</h2>
+            <p class="section-subtitle">These magical friends are helping the bunny the most!</p>
 
-document.addEventListener('keydown', (e) => {
-    // Support button on Enter
-    if (e.key === 'Enter' && document.activeElement.id === 'customAmount') {
-        processSupport();
-    }
-});
+            <div class="leaderboard-container">
+                <div class="leaderboard-list" id="leaderboardList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
 
-// ===========================
-// INITIALIZATION
-// ===========================
+            <div class="empty-leaderboard" id="emptyLeaderboard">
+                <p class="empty-message">🐰 Be the first to support the bunny's journey!</p>
+            </div>
+        </div>
+    </section>
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Load saved state
-    loadState();
-    
-    // Adjust animations for device
-    adjustAnimationsForDevice();
-    
-    // Add keyboard shortcut hints (optional)
-    console.log('🐰 Bunny\'s Journey loaded! Help the bunny reach the carrot village! ✨');
-    
-    // Add some cute console messages
-    console.log('%c🐰 Welcome to Bunny\'s Journey! 🥕', 'font-size: 20px; color: #b89dd9; font-weight: bold;');
-    console.log('%cMay your support bring joy and magic to the bunny\'s path! ✨', 'font-size: 14px; color: #9d7eb8;');
-    
-    // Setup preset buttons
-    setupPresetButtons();
-    
-    // Setup custom amount input
-    setupCustomAmountInput();
-    
-    // Setup scroll animations
-    setupScrollAnimations();
-});
+    <!-- Fun Facts Section -->
+    <section class="facts-section">
+        <div class="section-container">
+            <h2 class="section-title">Bunny Fun Facts 🌟</h2>
 
-// ===========================
-// SETUP FUNCTIONS
-// ===========================
+            <div class="facts-grid">
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">🐰</span>
+                    <h3>Did you know?</h3>
+                    <p>Bunnies can see nearly 360° around them!</p>
+                </div>
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">🥕</span>
+                    <h3>Carrot Power!</h3>
+                    <p>Carrots help bunnies see better in the dark.</p>
+                </div>
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">⭐</span>
+                    <h3>Magical Journey</h3>
+                    <p>Every hop brings us closer to dreams coming true!</p>
+                </div>
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">💕</span>
+                    <h3>Community Magic</h3>
+                    <p>Together, we can achieve anything!</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-function setupPresetButtons() {
-    document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const amount = parseFloat(this.getAttribute('data-amount'));
-            if (!isNaN(amount)) {
-                selectAmount(amount);
-            }
-        });
-    });
-}
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Bunny's Journey</h4>
+                <p>A magical adventure powered by kindness and community support.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#journey-section">Support</a>
+                <a href="#journey-section">Journey Progress</a>
+            </div>
+            <div class="footer-section">
+                <h4>Stay Connected</h4>
+                <p>🐰 Follow along on the journey!</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Made with 💝 and lots of bunny hops ✨</p>
+            <p class="footer-year">© 2026 Bunny's Journey. All rights reserved.</p>
+        </div>
+    </footer>
 
-function setupCustomAmountInput() {
-    const customAmountInput = document.getElementById('customAmount');
-    if (customAmountInput) {
-        customAmountInput.addEventListener('focus', () => {
-            document.querySelectorAll('.preset-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            state.selectedAmount = 0;
-        });
-    }
-}
+    <!-- Celebration Animation Container -->
+    <div class="celebration-container" id="celebrationContainer"></div>
 
-function setupScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // Observe elements for fade-in on scroll
-    document.querySelectorAll('.leaderboard-item, .fact-card, .stat-card').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.5s ease-out';
-        observer.observe(el);
-    });
-}
-
-// ===========================
-// WINDOW RESIZE HANDLER
-// ===========================
-
-window.addEventListener('resize', () => {
-    adjustAnimationsForDevice();
-});
-
-// ===========================
-// PAGE VISIBILITY HANDLER
-// ===========================
-
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        // Page is hidden - could pause animations if needed
-    } else {
-        // Page is visible - resume
-    }
-});
-
-// ===========================
-// ERROR HANDLING
-// ===========================
-
-window.addEventListener('error', (e) => {
-    console.error('🐰 Oops! An error occurred:', e.error);
-});
-
+    <script src="script.js"></script>
+</body>
+</html>
 
 
