@@ -50,15 +50,7 @@ async function processSupport() {
 
   const data = await response.json();
 
-  if (data.url) {
-
-    window.location.href = data.url;
-
-  } else {
-
-    showPopup("Stripe error 🐰");
-
-  }
+  window.location.href = data.url;
 
 }
 
