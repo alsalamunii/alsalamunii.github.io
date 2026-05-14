@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bunny's Journey to the Magical Carrot Village</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background"></div>
+    <div class="floating-particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🐰</span>
+                <span class="logo-text">Bunny's Journey</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Help the Bunny<br>Reach the Magical<br><span class="gradient-text">Carrot Village</span></h1>
+                <p class="hero-subtitle">Embark on a dreamy adventure! Every little bit of support helps our precious bunny hop closer to home, where the sweetest carrots grow in fields of starlight.</p>
+                <button class="cta-button primary-btn" onclick="scrollToJourney()">
+                    <span class="btn-icon">✨</span> Support the Journey
+                </button>
+            </div>
+            <div class="hero-illustration">
+                <div class="bunny-hero">
+                    <div class="bunny-ears"></div>
+                    <div class="bunny-head"></div>
+                    <div class="bunny-body"></div>
+                </div>
+                <div class="floating-elements">
+                    <div class="float-1">🥕</div>
+                    <div class="float-2">✨</div>
+                    <div class="float-3">⭐</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bunny Journey Section -->
+    <section class="journey-section" id="journey-section">
+        <div class="section-container">
+            <h2 class="section-title">The Magical Path</h2>
+            <p class="section-subtitle">Watch the bunny hop closer to its dream destination</p>
+
+            <!-- Main Journey Container -->
+            <div class="journey-container">
+                <!-- Path and Bunny -->
+                <div class="path-wrapper">
+                    <div class="journey-path">
+                        <div class="path-fill" id="pathFill"></div>
+                        <div class="bunny-character" id="bunnyCharacter">
+                            <div class="bunny-ears-small"></div>
+                            <div class="bunny-head-small"></div>
+                            <div class="bunny-body-small"></div>
+                        </div>
+                    </div>
+                    <div class="path-labels">
+                        <span class="start-label">Home 🏡</span>
+                        <span class="end-label">Carrot Village 🥕</span>
+                    </div>
+                </div>
+
+                <!-- Progress Stats -->
+                <div class="progress-stats">
+                    <div class="stat-card">
+                        <span class="stat-label">Distance Traveled</span>
+                        <span class="stat-value" id="progressPercentage">0%</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Total Supporters</span>
+                        <span class="stat-value" id="totalSupporters">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Carrots Earned</span>
+                        <span class="stat-value" id="carrotsEarned">0</span>
+                    </div>
+                </div>
+
+                <!-- Support Form -->
+                <div class="support-card glassmorphism">
+                    <h3 class="card-title">Help the Bunny</h3>
+                    <p class="card-subtitle">Choose how much support you'd like to give</p>
+
+                    <!-- Preset Amounts -->
+                    <div class="support-presets">
+                        <button class="preset-btn" onclick="selectAmount(5)">
+                            <span class="amount">$5</span>
+                            <span class="desc">1 Hop</span>
+                        </button>
+                        <button class="preset-btn" onclick="selectAmount(10)">
+                            <span class="amount">$10</span>
+                            <span class="desc">2 Hops</span>
+                        </button>
+                        <button class="preset-btn" onclick="selectAmount(25)">
+                            <span class="amount">$25</span>
+                            <span class="desc">5 Hops</span>
+                        </button>
+                        <button class="preset-btn" onclick="selectAmount(50)">
+                            <span class="amount">$50</span>
+                            <span class="desc">10 Hops</span>
+                        </button>
+                    </div>
+
+                    <!-- Custom Amount -->
+                    <div class="custom-amount">
+                        <label for="customAmount">Custom Amount</label>
+                        <div class="input-group">
+                            <span class="currency">$</span>
+                            <input type="number" id="customAmount" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <!-- Name Input -->
+                    <div class="name-input">
+                        <label for="supporterName">Your Name (optional)</label>
+                        <input type="text" id="supporterName" placeholder="Magical Friend ✨">
+                    </div>
+
+                    <!-- Support Button -->
+                    <button
+  type="button"
+  class="cta-button primary-btn full-width"
+  onclick="processSupport(event)"
+>
+  <span class="btn-icon">💝</span>
+  Support the Journey
+</button>
+                        <span class="btn-icon">💝</span> Support the Journey
+                    </button>
+
+                    <p class="support-note">🐰 Every donation helps! Even $1 makes a difference.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section class="leaderboard-section">
+        <div class="section-container">
+            <h2 class="section-title">Top Supporters 👑</h2>
+            <p class="section-subtitle">These magical friends are helping the bunny the most!</p>
+
+            <div class="leaderboard-container">
+                <div class="leaderboard-list" id="leaderboardList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="empty-leaderboard" id="emptyLeaderboard">
+                <p class="empty-message">🐰 Be the first to support the bunny's journey!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fun Facts Section -->
+    <section class="facts-section">
+        <div class="section-container">
+            <h2 class="section-title">Bunny Fun Facts 🌟</h2>
+
+            <div class="facts-grid">
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">🐰</span>
+                    <h3>Did you know?</h3>
+                    <p>Bunnies can see nearly 360° around them!</p>
+                </div>
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">🥕</span>
+                    <h3>Carrot Power!</h3>
+                    <p>Carrots help bunnies see better in the dark.</p>
+                </div>
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">⭐</span>
+                    <h3>Magical Journey</h3>
+                    <p>Every hop brings us closer to dreams coming true!</p>
+                </div>
+                <div class="fact-card glassmorphism">
+                    <span class="fact-icon">💕</span>
+                    <h3>Community Magic</h3>
+                    <p>Together, we can achieve anything!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Bunny's Journey</h4>
+                <p>A magical adventure powered by kindness and community support.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#journey-section">Support</a>
+                <a href="#journey-section">Journey Progress</a>
+            </div>
+            <div class="footer-section">
+                <h4>Stay Connected</h4>
+                <p>🐰 Follow along on the journey!</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Made with 💝 and lots of bunny hops ✨</p>
+            <p class="footer-year">© 2026 Bunny's Journey. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Celebration Animation Container -->
+    <div class="celebration-container" id="celebrationContainer"></div>
+
+    <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  onSnapshot,
+  updateDoc,
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC3haJqrGABgiaDBVDNWq91T0uHN0wj0_w",
+  authDomain: "getbunny-4fa71.firebaseapp.com",
+  projectId: "getbunny-4fa71",
+  storageBucket: "getbunny-4fa71.firebasestorage.app",
+  messagingSenderId: "697945124500",
+  appId: "1:697945124500:web:0112ba3384588f11488e81"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const progressRef = doc(db, "bunny", "journey");
+
+const donationsRef = collection(db, "donations");
+
+let currentProgress = 0;
+
+// Elements
+const pathFill = document.getElementById("pathFill");
+const bunnyCharacter = document.getElementById("bunnyCharacter");
+const progressPercentage = document.getElementById("progressPercentage");
+const totalSupporters = document.getElementById("totalSupporters");
+const carrotsEarned = document.getElementById("carrotsEarned");
+
+// Live Sync
+onSnapshot(progressRef, async (snap) => {
+
+const leaderboardList =
+  document.getElementById("leaderboardList");
+
+const emptyLeaderboard =
+  document.getElementById("emptyLeaderboard");
+
+onSnapshot(donationsRef, (snapshot) => {
+
+  leaderboardList.innerHTML = "";
+
+  if (snapshot.empty) {
+
+    emptyLeaderboard.style.display = "block";
+
+    return;
+
+  }
+
+  emptyLeaderboard.style.display = "none";
+
+  let donations = [];
+
+  snapshot.forEach((doc) => {
+
+    donations.push(doc.data());
+
+  });
+
+  donations.sort((a, b) => b.amount - a.amount);
+
+  donations.forEach((d, i) => {
+
+    const item = document.createElement("div");
+
+    item.className = "leaderboard-item";
+
+    item.innerHTML = `
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:15px;
+        margin-top:10px;
+        border-radius:20px;
+        background:rgba(255,255,255,0.08);
+        backdrop-filter:blur(10px);
+      ">
+
+        <div>
+          🐰 #${i + 1} ${d.name}
+        </div>
+
+        <div>
+          💖 $${d.amount}
+        </div>
+
+      </div>
+
+    `;
+
+    leaderboardList.appendChild(item);
+
+  });
+
+});
+
+  if (snap.exists()) {
+
+    const data = snap.data();
+
+    currentProgress = data.progress || 0;
+
+    pathFill.style.width = currentProgress + "%";
+
+    bunnyCharacter.style.left = currentProgress + "%";
+
+    progressPercentage.innerHTML = currentProgress + "%";
+
+    totalSupporters.innerHTML = data.supporters || 0;
+
+    carrotsEarned.innerHTML = data.carrots || 0;
+
+  } else {
+
+    await setDoc(progressRef, {
+      progress: 0,
+      supporters: 0,
+      carrots: 0
+    });
+
+  }
+
+});
+
+// Support Function
+window.processSupport = async function (event) {
+
+  if (event) {
+    event.preventDefault();
+  }
+
+  let amount =
+    parseFloat(
+      document.getElementById(
+        "customAmount"
+      ).value
+    );
+
+  if (!amount || amount <= 0) {
+
+    showPopup(
+      "🐰 Please enter a valid support amount"
+    );
+
+    return false;
+
+  }
+
+  const supporterName =
+    document.getElementById(
+      "supporterName"
+    ).value || "Anonymous";
+
+  localStorage.setItem(
+    "pendingDonation",
+    amount
+  );
+
+  localStorage.setItem(
+    "pendingName",
+    supporterName
+  );
+
+  window.location.assign(
+    `https://bunny-api.mothmedtameraii.workers.dev/create-checkout-session?amount=${amount}`
+  );
+
+  return false;
+
+};
+
+// Preset Buttons
+window.selectAmount = function(amount) {
+
+  document.getElementById("customAmount").value = amount;
+
+};
+
+// Scroll Function
+window.scrollToJourney = function () {
+
+  document
+    .getElementById("journey-section")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+};
+
+// Celebration Animation
+function createCelebration() {
+
+  const container =
+    document.getElementById("celebrationContainer");
+
+  for (let i = 0; i < 20; i++) {
+
+    const sparkle = document.createElement("div");
+
+    sparkle.innerHTML = ["✨","🥕","🐰","⭐"][Math.floor(Math.random()*4)];
+
+    sparkle.style.position = "fixed";
+    sparkle.style.left = Math.random() * 100 + "vw";
+    sparkle.style.top = "50vh";
+    sparkle.style.fontSize = "30px";
+    sparkle.style.zIndex = "9999";
+    sparkle.style.pointerEvents = "none";
+    sparkle.style.transition = "all 2s ease";
+
+    container.appendChild(sparkle);
+
+    setTimeout(() => {
+      sparkle.style.transform =
+        `translateY(-200px) rotate(${Math.random()*360}deg)`;
+      sparkle.style.opacity = "0";
+    }, 50);
+
+    setTimeout(() => {
+      sparkle.remove();
+    }, 2000);
+
+  }
+
+}
+
+console.log("🐰 Firebase Live Sync Ready");
+
+</script>
+</script>
+</script>
+</html>
