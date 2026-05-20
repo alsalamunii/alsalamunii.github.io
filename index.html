@@ -484,6 +484,13 @@ logEvent(analytics, "test_event");
         }
 
         handleStripeSuccess();
+
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
+await setDoc(doc(db, "test", "hello"), {
+  time: Date.now()
+});
+        
     </script>
 </body>
 </html>
