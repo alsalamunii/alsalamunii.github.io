@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - GetBunny 🐰</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #ff69b4;
+            --light-pink: #ffb6c1;
+            --text-dark: #2d2d2d;
+            --bg-gradient: linear-gradient(135deg, #fff5f7 0%, #ffeef2 100%);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(255, 105, 180, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .bunny-avatar {
+            font-size: 50px;
+            background: white;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50px;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.15);
+        }
+
+        h1 {
+            color: var(--text-dark);
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, #ff41a1 0%, #ff69b4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* تنسيق النصوص والفقرات */
+        p {
+            font-size: 16px;
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #d13b86;
+        }
+
+        /* الروابط وأزرار التواصل */
+        .email-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            border-radius: 18px;
+            border: 1px dashed var(--light-pink);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .email-box a {
+            color: var(--primary-pink);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .email-box a:hover {
+            color: #d13b86;
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 105, 180, 0.15);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-pink);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .back-btn:hover {
+            color: var(--primary-pink);
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 10px; }
+            .container { padding: 25px 20px; }
+            h1 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Journey</a>
+
+        <div class="header">
+            <div class="bunny-avatar">🐰</div>
+            <h1>About Me</h1>
+        </div>
+
+        <p>Hi, I'm <span class="highlight">Tamer</span>!</p>
+        
+        <p>I am 17 years old, driven by a big dream and a passion for creating my own startup. Due to the challenging local economic conditions in my country and my young age—which makes getting traditional funding nearly impossible—I decided not to give up. I built this platform with a simple, heartfelt concept, relying on the kindness and generosity of amazing people like you who believe in young dreamers.</p>
+        
+        <p>I have poured countless hours of hard work into bringing this website to life. Since I am still learning code, I leveraged Artificial Intelligence to help me build and optimize the front-end and back-end systems. I am constantly working every day to improve the user experience, fix bugs, and upgrade the platform.</p>
+        
+        <p>This is just the beginning; I plan to expand this idea into something even more impactful in the future. To understand more about how the platform works, feel free to check our Privacy Policy and Terms.</p>
+        
+        <p>If you have any questions, suggestions, or encounter any technical issues, I would love to hear from you. Please reach out to me directly:</p>
+
+        <div class="email-box">
+            <span>📬 Email:</span>
+            <a href="mailto:getbunny@gmail.com">getbunny@gmail.com</a>
+        </div>
+
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a> • 
+            <a href="/terms.html">Terms of Service</a>
+        </div>
+    </div>
+
+</body>
+</html>
